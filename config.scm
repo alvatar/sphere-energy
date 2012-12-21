@@ -1,5 +1,13 @@
-(sphere: "base")
+(sphere: "energy")
 (dependencies:
- (assert
+ ((= exception)
   (include
-   (base: syntax-macros))))
+   (energy: exception-macros))
+  (load
+   (algorithm: srfi-1-list)))
+ ((= testing-macros)
+  (include
+   (energy: exception-macros)))
+ ((= testing)
+  (include
+   (energy: testing-macros))))

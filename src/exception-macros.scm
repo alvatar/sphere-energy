@@ -1,3 +1,4 @@
+;;!! SRFI-34
 ;; Copyright (C) Richard Kelsey, Michael Sperber (2002). All Rights Reserved.
 
 ;; Provided by Gambit natively:
@@ -88,3 +89,33 @@
                   (guard-k (lambda ()
                              (apply values args))))))))))))))
 
+
+;;!! SRFI-35
+
+;;! define-condition-type
+(define-syntax define-condition-type
+  (syntax-rules ()
+    ((define-condition-type ?name ?supertype ?predicate
+       (?field1 ?accessor1) ...)
+     (begin
+       (define ?name
+         (make-condition-type '?name
+                              ?supertype
+                              '(?field1 ...)))
+       (define (?predicate thing)
+         (and (condition? thing)
+              (condition-has-type? thing ?name)))
+       (define (?accessor1 condition)
+         (condition-ref (extract-condition condition ?name)
+                        '?field1))
+       ...))))
+
+;;! condition
+(define-syntax condition
+  (syntax-rules ()
+    ((condition (?type1 (?field1 ?value1) ...) ...)
+     (type-field-alist->condition
+      (list
+       (cons ?type1
+             (list (cons '?field1 ?value1) ...))
+       ...)))))
