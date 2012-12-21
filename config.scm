@@ -4,7 +4,7 @@
   (include
    (energy: exception-macros))
   (load
-   (algorithm: srfi-1-list)))
+   (algorithm: list)))
  ((= testing-macros)
   (include
    (energy: exception-macros)))

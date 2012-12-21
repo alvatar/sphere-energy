@@ -3,7 +3,8 @@
     exception
     functional
     profile
-    repl-server))
+    repl-server
+    testing))
 
 (define-task compile ()
   (for-each (lambda (m) (sake:compile-c-to-o (sake:compile-to-c m)))
