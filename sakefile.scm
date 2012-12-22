@@ -4,7 +4,8 @@
     functional
     profile
     repl-server
-    testing))
+    testing
+    time))
 
 (define-task compile ()
   (for-each (lambda (m) (sake:compile-c-to-o (sake:compile-to-c m)))
