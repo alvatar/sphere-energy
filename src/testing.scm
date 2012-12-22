@@ -101,7 +101,7 @@
 
 ;;! Controls whether a log file is generated.
 ;; Not part of the specification.
-(define test-log-to-file #t)
+(define test-log-to-file #f)
 
 ;;! test-runner-simple
 (define (test-runner-simple)
