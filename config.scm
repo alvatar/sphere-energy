@@ -2,4 +2,4 @@
 (dependencies:
  ((= testing-macros)
   (include
-   (energy: exception-macros))))
+   (= exception-macros))))
