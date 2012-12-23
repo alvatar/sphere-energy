@@ -4,6 +4,7 @@
     functional
     localization
     profile
+    program-arguments
     repl-server
     testing
     time))
