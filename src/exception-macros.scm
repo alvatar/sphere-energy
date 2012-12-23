@@ -1,4 +1,4 @@
-;;!! SRFI-34
+;;!! SRFI-34 Exception Handling for Programs
 ;; Copyright (C) Richard Kelsey, Michael Sperber (2002). All Rights Reserved.
 
 ;; Provided by Gambit natively:
@@ -90,7 +90,8 @@
                              (apply values args))))))))))))))
 
 
-;;!! SRFI-35
+;;!! SRFI-35 Conditions
+;; Copyright (C) Richard Kelsey, Michael Sperber (2002). All Rights Reserved.
 
 ;;! define-condition-type
 (define-syntax define-condition-type

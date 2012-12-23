@@ -1,3 +1,6 @@
+;;!! SRFI-35 Conditions
+;; Copyright (C) Richard Kelsey, Michael Sperber (2002). All Rights Reserved.
+
 (define-record-type :condition-type
   (really-make-condition-type name supertype fields all-fields)
   condition-type?
@@ -160,3 +163,88 @@
 
 (define-condition-type &error &serious
   error?)
+
+
+;;!! SRFI-36 I/O Conditions
+;; Copyright (C) Michael Sperber (2002). All Rights Reserved.
+
+;; &error 
+;;   &i/o-error
+;;     &i/o-port-error (has a port field)
+;;       &i/o-read-error
+;;       &i/o-write-error
+;;       &i/o-closed-error
+;;     &i/o-filename-error (has a filename field)
+;;       &i/o-malformed-filename-error
+;;       &i/o-file-protection-error 
+;;         &i/o-file-is-read-only-error
+;;       &i/o-file-already-exists-error
+;;       &i/o-no-such-file-error
+;;   &read-error
+
+;;! This is a supertype for a set of more specific I/O errors.
+(define-condition-type &i/o-error &error
+  i/o-error?)
+
+;;! This condition type specifies an I/O error that occurred
+;; during an operation on a port. Condition objects belonging to
+;; this type must specify a port in the port field.
+(define-condition-type &i/o-port-error &i/o-error
+  i/o-port-error?
+  (port i/o-error-port))
+
+
+;;! This condition type specifies a read error that occurred during
+;; an operation on a port.
+(define-condition-type &i/o-read-error &i/o-port-error
+  i/o-read-error?)
+
+;;! This condition type specifies a write error that occurred during
+;; an operation on a port.
+(define-condition-type &i/o-write-error &i/o-port-error
+  i/o-write-error?)
+
+;;! A condition of this type specifies that an operation tried to
+;; operate on a closed port under the assumption that it is open.
+(define-condition-type &i/o-closed-error &i/o-port-error
+  i/o-closed-error?)
+
+;;! This condition type specifies an I/O error that occurred during an
+;; operation on a named file. Condition objects belonging to this type
+;; must specify a file name in the filename field.
+(define-condition-type &i/o-filename-error &i/o-error
+  i/o-filename-error?
+  (filename i/o-error-filename))
+
+;;! This condition type indicates that a file name had an invalid format.
+(define-condition-type &i/o-malformed-filename-error &i/o-filename-error
+  i/o-malformed-filename-error?)
+
+;;! A condition of this type specifies that an operation tried to operate
+;; on a named file with insufficient access rights.
+(define-condition-type &i/o-file-protection-error &i/o-filename-error
+  i/o-file-protection-error?)
+
+;;! A condition of this type specifies that an operation tried to operate
+;; on a named read-only file under the assumption that it is writeable.
+(define-condition-type &i/o-file-is-read-only-error &i/o-file-protection-error
+  i/o-file-is-read-only-error?)
+
+;;! A condition of this type specifies that an operation tried to operate
+;; on an existing named file under the assumption that it does not exist.
+(define-condition-type &i/o-file-already-exists-error &i/o-filename-error
+  i/o-file-already-exists-error?)
+
+;;! A condition of this type specifies that an operation tried to operate
+;; on an non-existent named file under the assumption that it exists.
+(define-condition-type &i/o-no-such-file-error &i/o-filename-error
+  i/o-no-such-file-error?)
+
+;;! A condition of this type specifies that a parse error happened during
+;; a read operation. 
+(define-condition-type &read-error &error
+  read-error?
+  (line read-error-line)
+  (column read-error-column)
+  (position read-error-position)
+  (span read-error-span))
