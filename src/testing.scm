@@ -341,7 +341,9 @@
 		(display ":")
 		(if source-line (display (cdr source-line)))
 		(display ": ")))
+          (display "\033[00;31m") ;Display FAIL and XPASS in red
 	  (display (if (eq? kind 'xpass) "XPASS" "FAIL"))
+          (display "\033[00m") ;End color display
 	  (if test-name
 	      (begin
 		(display " ")
