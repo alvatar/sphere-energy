@@ -2,6 +2,7 @@
   '(debug/debuggee
     exception
     functional
+    localization
     profile
     repl-server
     testing
