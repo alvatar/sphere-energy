@@ -56,9 +56,9 @@
 
 ;; (define pipe compose-left)
 
-;;; Negate a function
+;;; Complement a function (negate)
 
-(define (negate f)
+(define (complement f)
   (lambda args (not (apply f args))))
 
 ;;; Adjoin several functions
