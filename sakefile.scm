@@ -6,6 +6,7 @@
     profile
     program-arguments
     repl-server
+    rest-values
     shared-structure
     testing
     time))
