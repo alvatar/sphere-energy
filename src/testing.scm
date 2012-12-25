@@ -1,4 +1,5 @@
-;; Copyright (c) 2005, 2006 Per Bothner
+;; Copyright (c) 2005, 2006, 2007, 2012 Per Bothner
+;; Modified for Scheme Spheres by Álvaro Castro-Castilla, Copyright (c) 2012
 ;;
 ;; Permission is hereby granted, free of charge, to any person
 ;; obtaining a copy of this software and associated documentation
@@ -66,19 +67,20 @@
 
 ;;! test-runner-reset
 (define (test-runner-reset runner)
-  (test-runner-pass-count! runner 0)
-  (test-runner-fail-count! runner 0)
-  (test-runner-xpass-count! runner 0)
-  (test-runner-xfail-count! runner 0)
-  (test-runner-skip-count! runner 0)
-  (%test-runner-total-count! runner 0)
-  (%test-runner-count-list! runner '())
-  (%test-runner-run-list! runner #t)
-  (%test-runner-skip-list! runner '())
-  (%test-runner-fail-list! runner '())
-  (%test-runner-skip-save! runner '())
-  (%test-runner-fail-save! runner '())
-  (test-runner-group-stack! runner '()))
+    (test-result-alist! runner '())
+    (test-runner-pass-count! runner 0)
+    (test-runner-fail-count! runner 0)
+    (test-runner-xpass-count! runner 0)
+    (test-runner-xfail-count! runner 0)
+    (test-runner-skip-count! runner 0)
+    (%test-runner-total-count! runner 0)
+    (%test-runner-count-list! runner '())
+    (%test-runner-run-list! runner #t)
+    (%test-runner-skip-list! runner '())
+    (%test-runner-fail-list! runner '())
+    (%test-runner-skip-save! runner '())
+    (%test-runner-fail-save! runner '())
+    (test-runner-group-stack! runner '()))
 
 ;;! test-runner-group-path
 (define (test-runner-group-path runner)
@@ -455,16 +457,6 @@
 
 ;;! test-apply
 (define (test-apply first . rest)
-  (define (null-list? l)
-    (cond ((pair? l) #f)
-          ((null? l) #t)
-          (else (error "null-list?: argument out of domain" l))))
-  (define (reverse! lis)
-    (let lp ((lis lis) (ans '()))
-      (if (null-list? lis) ans
-          (let ((tail (cdr lis)))
-            (set-cdr! lis ans)
-            (lp tail lis)))))
   (if (test-runner? first)
       (test-with-runner first (apply test-apply rest))
       (let ((r (test-runner-current)))
