@@ -125,26 +125,26 @@
 
 ;;TODO!!!
 ;; r2rs-style currying define.
-'(define-syntax define
-   (let-syntax ((old-define define))
-     (letrec-syntax
-	 ((new-define
-	   (syntax-rules ()
-	     ((_ (var-or-prototype . args) . body)
-	      (new-define var-or-prototype (lambda args . body)))
-	     ((_ var expr) (old-define var expr)))))
-       new-define)))
+;; (define-syntax define
+;;   (let-syntax ((old-define define))
+;;     (letrec-syntax
+;;         ((new-define
+;;           (syntax-rules ()
+;;             ((_ (var-or-prototype . args) . body)
+;;              (new-define var-or-prototype (lambda args . body)))
+;;             ((_ var expr) (old-define var expr)))))
+;;       new-define)))
 
-'(define-syntax define
-   (let-syntax ((old-define define))
-     (define-syntax new-define
-       (syntax-rules ()
-	 ((_ (var-or-prototype . args) . body)
-	  (new-define var-or-prototype (lambda args . body)))
-	 ((_ var expr) (old-define var expr))))
-     new-define))
+;; (define-syntax define
+;;   (let-syntax ((old-define define))
+;;     (define-syntax new-define
+;;       (syntax-rules ()
+;;         ((_ (var-or-prototype . args) . body)
+;;          (new-define var-or-prototype (lambda args . body)))
+;;         ((_ var expr) (old-define var expr))))
+;;     new-define))
 
-'(let ((multiplier 2))
-   (define ((curried-* x) y) (* x y))
-   (map (curried-* multiplier) '(3 4 5)))
+;; (let ((multiplier 2))
+;;   (define ((curried-* x) y) (* x y))
+;;   (map (curried-* multiplier) '(3 4 5)))
 
