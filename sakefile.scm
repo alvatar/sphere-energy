@@ -26,7 +26,7 @@
 (define-task install ()
   ;; Install compiled module files
   (for-each sake:install-compiled-module modules)
-  (sake:install-sphere-in-system))
+  (sake:install-sphere-to-system))
 
 (define-task uninstall ()
   (sake:uninstall-sphere-from-system))
