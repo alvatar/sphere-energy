@@ -1,9 +1,7 @@
 ;;! SRFI-37 args-fold: a program argument processor
-
 ;; Copyright (c) 2002 Anthony Carrico
-;;
-;; All rights reserved.
-;;
+;; Copyright (c) 2013 Álvaro Castro-Castilla
+
 ;; Redistribution and use in source and binary forms, with or without
 ;; modification, are permitted provided that the following conditions
 ;; are met:
@@ -30,35 +28,15 @@
 ;;   "SRFI 9: Defining Record Types"
 ;;   "SRFI 11: Syntax for receiving multiple values"
 
-;; Example:
-;; (define options
-;;   (list (option '(#\d "debug") #f #t
-;;                 (lambda (option name arg debug batch paths files)
-;;                   (values (or arg "2") batch paths files)))
-;;         (option '(#\b "batch") #f #f
-;;                 (lambda (option name arg debug batch paths files)
-;;                   (values debug #t paths files)))
-;;         (option '(#\I "include") #t #f
-;;                 (lambda (option name arg debug batch paths files)
-;;                   (values debug batch (cons arg paths) files)))))
-;; (define (main args)
-;;   (receive (debug-level batch-mode include-paths files)
-;;            (args-fold (cdr args)
-;;                       options
-;;                       (lambda (option name arg . seeds) ; unrecognized
-;;                         (error "Unrecognized option:" name))
-;;                       (lambda (operand debug batch paths files) ; operand
-;;                         (values debug batch paths (cons operand files)))
-;;                       0               ; default value of debug level
-;;                       #f              ; default value of batch mode
-;;                       '()             ; initial value of include paths
-;;                       '()             ; initial value of files
-;;                       )
-;;            (print "debug level = " debug-level)
-;;            (print "batch mode = " batch-mode)
-;;            (print "include paths = " (reverse include-paths))
-;;            (print "files = " (reverse files))
-;;            0))
+(cond-expand
+ (debug (declare (separate)
+                 (standard-bindings)
+                 (fixnum)))
+ (else (declare (separate)
+                (standard-bindings)
+                (fixnum)
+                ;(not safe)
+                )))
 
 (define option #f)
 (define option-names #f)
@@ -82,6 +60,36 @@
   (set! option-processor $option-processor)
   (set! option? $option?))
 
+
+;; Example
+;; (define options
+;;   (list (option '(#\d "debug") #f #t
+;;                 (lambda (option name arg debug batch paths files)
+;;                   (values (or arg "2") batch paths files)))
+;;         (option '(#\b "batch") #f #f
+;;                 (lambda (option name arg debug batch paths files)
+;;                   (values debug #t paths files)))
+;;         (option '(#\I "include") #t #f
+;;                 (lambda (option name arg debug batch paths files)
+;;                   (values debug batch (cons arg paths) files)))))
+;; (define (main args)
+;;   (receive (debug-level batch-mode include-paths files)
+;;            (args-fold (cdr args)
+;;                       options
+;;                       (lambda (option name arg . seeds) ; unrecognized
+;;                         (error "Unrecognized option:" (string name)))
+;;                       (lambda (operand debug batch paths files) ; operand
+;;                         (values debug batch paths (cons operand files)))
+;;                       0               ; default value of debug level
+;;                       #f              ; default value of batch mode
+;;                       '()             ; initial value of include paths
+;;                       '()             ; initial value of files
+;;                       )
+;;            (print "debug level = " debug-level)
+;;            (print "batch mode = " batch-mode)
+;;            (print "include paths = " (reverse include-paths))
+;;            (print "files = " (reverse files))
+;;            0))
 (define args-fold
   (lambda (args
       options
@@ -245,3 +253,5 @@
                     (let-values ((seeds (apply operand-proc arg seeds)))
                       (scan-args args seeds)))))))))
       (scan-args args seeds))))
+
+

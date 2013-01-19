@@ -1,5 +1,6 @@
 (define modules
   '(debug/debuggee
+    error-code
     exception
     functional
     localization
@@ -8,6 +9,7 @@
     repl-server
     rest-values
     shared-structure
+    template
     testing
     time))
 
@@ -24,10 +26,10 @@
 (define-task install ()
   ;; Install compiled module files
   (for-each sake:install-compiled-module modules)
-  (sake:install-system-sphere))
+  (sake:install-sphere-in-system))
 
 (define-task uninstall ()
-  (sake:uninstall-system-sphere))
+  (sake:uninstall-sphere-from-system))
 
 (define-task all (compile install)
   'all)
