@@ -130,3 +130,4 @@
 (define error:owner-died 130)
 (define error:state-not-recoverable 131)
 
+(define error:success 0)
