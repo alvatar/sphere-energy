@@ -85,10 +85,6 @@
                                          (values (cons (cons 'arg-string (parse chars))
                                                        tokens)
                                                  rest))))
-                      ;; Ignored
-                      ((char=? (car strl) #\newline)
-                       (token-recur (cdr strl)
-                                    'ignored))
                       ;; Free string tokens
                       (else
                        (receive (chars-for-string rest)
@@ -160,10 +156,10 @@
     `(lambda ,input-parameters ,(generate-code (parse template-char-list)))))
 
 ;;! Build a template, use a string as input
-(define (build-template/string template parameters)
+(define (build-template-from-string template . parameters)
   (eval (generate-template-code (string->list template) parameters)))
 
 
 ;;! Build a template, use a file as input
-(define (build-template/file file parameters)
+(define (build-template-from-file file . parameters)
   (eval (generate-template-code (call-with-input-file file (lambda (p) (read-all p read-char))) parameters)))
