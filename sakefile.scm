@@ -14,8 +14,8 @@
     time))
 
 (define-task compile ()
-  (for-each (lambda (m) (sake:compile-c-to-o (sake:compile-to-c m)))
-            modules))
+  (for-each (lambda (m) (sake:compile-c-to-o (sake:compile-to-c m compiler-options: '(debug)))) modules)
+  (for-each (lambda (m) (sake:compile-c-to-o (sake:compile-to-c m))) modules))
 
 (define-task test ()
   (sake:test-all))
@@ -25,7 +25,7 @@
 
 (define-task install ()
   ;; Install compiled module files
-  (for-each sake:install-compiled-module modules)
+  (for-each (lambda (m) (sake:install-compiled-module m versions: '(() (debug)))) modules)
   (sake:install-sphere-to-system))
 
 (define-task uninstall ()
