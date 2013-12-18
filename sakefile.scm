@@ -25,11 +25,7 @@
 
 (define-task install ()
   ;; Install compiled module files
-  (for-each (lambda (m) (sake#install-compiled-module m versions: '(() (debug)))) modules)
-  (sake#install-sphere-to-system))
-
-(define-task uninstall ()
-  (sake#uninstall-sphere-from-system))
+  (for-each (lambda (m) (sake#install-compiled-module m versions: '(() (debug)))) modules))
 
 (define-task all (compile install)
   'all)
