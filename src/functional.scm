@@ -1,4 +1,4 @@
-;;; Copyright (c) 2012, Alvaro Castro-Castilla. All rights reserved.
+;;; Copyright (c) 2013, Alvaro Castro-Castilla. All rights reserved.
 ;;; Functional programming procedures
 
 (cond-expand
@@ -13,57 +13,65 @@
 ; Functional operators
 ;-------------------------------------------------------------------------------
 
-;;; U-combinator
-
+;;! U-combinator
 (define U
   (lambda (f) (f f)))
 
-;;; Y-combinator
-
+;;! Y-combinator
 (define Y
   (lambda (X)
     (U (lambda (proc)
          (X (lambda (arg) ((U proc) arg)))))))
 
-;;; The applicative-order imperative y-combinator (by Peter Landin)
-
+;;! The applicative-order imperative y-combinator (by Peter Landin)
 (define Y!
   (lambda (f)
     (letrec
         ((h (f (lambda (arg) (h arg)))))
       h)))
 
-;;; Function composition
+;;! Function composition
+;; (define *10sum (compose (lambda (a) (* 10 a)) +))
+;; (*10sum 2 5 7) ==> 140
+(define (compose f . rest)
+  (if (null? rest)
+      f
+      (let ((g (apply compose rest)))
+        (lambda args
+          (call-with-values (lambda () (apply g args)) f)))))
 
-(define (composer reducer . fns)
-  (reducer (lambda (fn chain)
-            (lambda args
-              (call-with-values (lambda () (apply fn args)) chain)))
-          values
-          fns))
+;;! Function composition (recursive implementation)
+;; Author: Taylor Campbell
+(define (recursive-compose . fs)
+  (let recur ((fs fs))
+    (if (null? fs)
+        values
+        (let ((f (car fs))
+              (g (recur (cdr fs))))
+          (lambda args
+            (call-with-values
+                (lambda () (apply g args))
+              f))))))
 
-;;; Compose executing the last function first (it starts from the right side)
+;;! Function composition (tail-recursive implementation)
+;; Author: Taylor Campbell
+(define (tail-recursive-compose . fs)
+  (let loop ((g values) (fs fs))
+    (if (null? fs)
+        g
+        (loop (lambda args
+                (call-with-values
+                    (lambda () (apply (car fs) args))
+                  g))
+              (cdr fs)))))
 
-;; (define (compose-right . fns)
-;;   (apply composer reduce fns))
 
-;; (define compose compose-right) ; TODO: a less general but more optimized implementation for compose?
-
-;;; Compose executing the first function first (it starts from the left side)
-
-;; (define (compose-left . fns)
-;;   (apply composer reduce-right fns))
-
-;; (define pipe compose-left)
-
-;;; Complement a function (negate)
-
+;;! Complement a function (negate)
 (define (complement f)
   (lambda args (not (apply f args))))
 
-;;; Adjoin several functions
-;;; f1 f2 f3 -> values f1 f2 f3
-
+;;! Adjoin several functions
+;; f1 f2 f3 -> values f1 f2 f3
 (define (adjoin . fs)
   (error "Not implemented"))
 
@@ -71,8 +79,7 @@
 ; Currying / uncurrying
 ;-------------------------------------------------------------------------------
 
-;;; Explicit currying of an arbitrary function
-
+;;! Explicit currying of an arbitrary function
 (define (curry fun arg1 . args)
   (if (pair? args)
       (let ((all-args (cons arg1 args)))
@@ -81,19 +88,17 @@
       (lambda x
         (apply fun (cons arg1 x)))))
 
-;;; Uncurrying
-;;;
-;;; (uncurry (lambda (a) (lambda (b) (lambda (c) (+ a b c)))) 5 2 1)
-
+;;! Uncurrying
+;; (uncurry (lambda (a) (lambda (b) (lambda (c) (+ a b c)))) 5 2 1)
 (define (uncurry f . arglist)
   (if (null? arglist) f
-    (apply uncurry (f (car arglist)) (cdr arglist))))
+      (apply uncurry (f (car arglist)) (cdr arglist))))
 
 ;-------------------------------------------------------------------------------
 ; Memoization
 ;-------------------------------------------------------------------------------
 
-;;; Function computation memoization specifying a key generation procedure
+;;! Function computation memoization specifying a key generation procedure
 (define (memoize/key-gen key-gen f)
   (let ((memos '()))                    ; OPTIMIZE: hash table!
     (lambda args
@@ -113,7 +118,7 @@
                            memos))
                results)))))))))
 
-;;; Function computation memoization with default key generation
+;;! Function computation memoization with default key generation
 (define (memoize f)
   (let ((cache (make-table))
 	(not-found (gensym)))
