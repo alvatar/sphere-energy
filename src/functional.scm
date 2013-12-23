@@ -70,11 +70,6 @@
 (define (complement f)
   (lambda args (not (apply f args))))
 
-;;! Adjoin several functions
-;; f1 f2 f3 -> values f1 f2 f3
-(define (adjoin . fs)
-  (error "Not implemented"))
-
 ;-------------------------------------------------------------------------------
 ; Currying / uncurrying
 ;-------------------------------------------------------------------------------
