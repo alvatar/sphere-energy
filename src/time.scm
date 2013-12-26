@@ -80,7 +80,12 @@
 ;; 'fractional part'. Will Fitzgerald 5/16/2003.
 ;; --------------------------------------------------------------
 
-
+;; :optional macro
+;; The code using this should be ported to Sphere's optional positional and named parameters
+(define-syntax :optional
+  (syntax-rules ()
+    ((_ val default-value)
+     (if (null? val) default-value (car val)))))
 
 ;; This file is modified by Per Eckerdal to work in Gambit and his
 ;; module system. The other change I did (which is rather large) is
