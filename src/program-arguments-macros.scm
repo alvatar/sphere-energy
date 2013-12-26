@@ -22,6 +22,9 @@
 
 ;;! args-fold-receive
 ;; A checked variation of RECEIVE for args-fold
+;;
+;; Example:
+;;
 ;; (args-fold-receive (project-name template platforms)
 ;;                    (args-fold (cddr (command-line))
 ;;                               ;; Option processors
