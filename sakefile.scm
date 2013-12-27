@@ -14,8 +14,10 @@
     time))
 
 (define-task compile ()
-  (for-each (lambda (m) (sake#compile-c-to-o (sake#compile-to-c m compiler-options: '(debug)))) modules)
-  (for-each (lambda (m) (sake#compile-c-to-o (sake#compile-to-c m))) modules))
+  (copy-file (string-append (current-source-directory) "debug/rdi.scm")
+             (string-append (current-build-directory) "rdi.scm"))
+  (for-each (lambda (m) (sake#compile-module m compiler-options: '(debug))) modules)
+  (for-each sake#compile-module modules))
 
 (define-task test ()
   (sake#test-all))
