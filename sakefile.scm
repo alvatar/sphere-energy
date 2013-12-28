@@ -5,7 +5,7 @@
     functional
     localization
     profile
-    program-arguments
+    functional-arguments
     repl-server
     rest-values
     shared-structure

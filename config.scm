@@ -2,7 +2,7 @@
 (dependencies:
  (exception
   (load (fabric: algorithm/list)))
- (program-arguments
+ (functional-arguments
   (include (core: base-macros)))
  (rest-values
   (load (fabric: algorithm/list)))
