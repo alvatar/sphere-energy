@@ -1,13 +1,14 @@
-;;; Copyright (c) 2012, Alvaro Castro-Castilla. All rights reserved.
+;;; Copyright (c) 2012-2013, Alvaro Castro-Castilla. All rights reserved.
 ;;; Functional programming procedures
 
 (##namespace ("energy:functional#"
               U
               Y
               Y!
-              composer
-              negate
-              adjoin
+              compose
+              recursive-compose
+              tail-recursive-compose
+              complement
               curry
               uncurry
               memoize/key-gen
