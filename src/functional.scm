@@ -70,6 +70,10 @@
 (define (complement f)
   (lambda args (not (apply f args))))
 
+;;! Create a function with the order of the 2 arguments swapped
+(define (flip func)
+  (lambda (arg1 arg2) (func arg2 arg1)))
+
 ;-------------------------------------------------------------------------------
 ; Currying / uncurrying
 ;-------------------------------------------------------------------------------

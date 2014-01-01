@@ -8,6 +8,7 @@
               compose
               recursive-compose
               tail-recursive-compose
+              flip
               complement
               curry
               uncurry
