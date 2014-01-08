@@ -1,8 +1,8 @@
 (define modules
-  '(debug/debuggee
+  '(arguments
+    debug/debuggee
     error-code
     exception
-    functional
     localization
     functional-arguments
     io
