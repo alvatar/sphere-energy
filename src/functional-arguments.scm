@@ -29,14 +29,12 @@
 ;;   "SRFI 11: Syntax for receiving multiple values"
 
 (cond-expand
- (debug (declare (separate)
-                 (standard-bindings)
-                 (fixnum)))
- (else (declare (separate)
-                (standard-bindings)
-                (fixnum)
-                ;(not safe)
-                )))
+ (optimize
+  (declare (standard-bindings) (extended-bindings) (not safe) (block)))
+ (debug
+  (declare (safe) (debug) (debug-location) (debug-source) (debug-environments)))
+ (else (void)))
+
 
 (define option #f)
 (define option-names #f)

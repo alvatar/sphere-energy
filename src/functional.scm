@@ -1,13 +1,12 @@
-;;; Copyright (c) 2013, Alvaro Castro-Castilla. All rights reserved.
+;;; Copyright (c) 2013-2014, Alvaro Castro-Castilla. All rights reserved.
 ;;; Functional programming procedures
 
 (cond-expand
- (gambit
-  (declare (standard-bindings)
-           (extended-bindings)
-           (block)
-           (mostly-generic)))
- (else))
+ (optimize
+  (declare (standard-bindings) (extended-bindings) (not safe) (block)))
+ (debug
+  (declare (safe) (debug) (debug-location) (debug-source) (debug-environments)))
+ (else (void)))
 
 ;-------------------------------------------------------------------------------
 ; Functional operators

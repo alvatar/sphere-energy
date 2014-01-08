@@ -1,6 +1,11 @@
-;;;============================================================================
 ;;; Copyright (c) 2011-2012 by Marc Feeley, All Rights Reserved.
-;;;============================================================================
+
+(cond-expand
+ (optimize
+  (declare (standard-bindings) (extended-bindings) (not safe) (block) (fixnum)))
+ (debug
+  (declare (safe) (debug) (debug-location) (debug-source) (debug-environments)))
+ (else (void)))
 
 (declare
  (standard-bindings)

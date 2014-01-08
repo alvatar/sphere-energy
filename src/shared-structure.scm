@@ -1,5 +1,13 @@
 ;;!! SRFI-38 External Representation for Data With Shared Structure
 
+(cond-expand
+ (optimize
+  (declare (standard-bindings) (extended-bindings) (not safe) (block)))
+ (debug
+  (declare (safe) (debug) (debug-location) (debug-source) (debug-environments)))
+ (else (void)))
+
+
 ;; A printer that shows all sharing of substructures.  Uses the Common
 ;; Lisp print-circle notation: #n# refers to a previous substructure
 ;; labeled with #n=.   Takes O(n^2) time.

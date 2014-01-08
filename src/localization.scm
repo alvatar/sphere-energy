@@ -1,6 +1,14 @@
 ;;!! SRFI-29 Localization
 ;; Copyright (C) Scott G. Miller (2002). All Rights Reserved.
 
+(cond-expand
+ (optimize
+  (declare (standard-bindings) (extended-bindings) (not safe) (block)))
+ (debug
+  (declare (safe) (debug) (debug-location) (debug-source) (debug-environments)))
+ (else (void)))
+
+
 ;; The association list in which bundles will be stored
 (define *localization-bundles* '())
 

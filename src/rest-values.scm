@@ -1,5 +1,12 @@
 ;;!!! SRFI-51: Handling rest list
 
+(cond-expand
+ (optimize
+  (declare (standard-bindings) (extended-bindings) (not safe) (block)))
+ (debug
+  (declare (safe) (debug) (debug-location) (debug-source) (debug-environments)))
+ (else (void)))
+
 ;;! rest-values
 (define (rest-values rest . default)
   (let* ((caller (if (or (null? default)
