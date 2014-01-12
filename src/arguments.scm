@@ -27,6 +27,31 @@
 ;; '((#\g 0 "global")
 ;;   (#\f 1 "file"))
 ;; 1 means that takes an argument, 0 it doesn't
+;; Example:
+;; (define (main . args)
+;;   (let ((commands
+;;          `(("install" ,@install-cmd)
+;;            ("uninstall" ,@uninstall-cmd)
+;;            ("help" ,@help-cmd)
+;;            ("update" ,@update-cmd)
+;;            ("search" ,@search-cmd)
+;;            ("set" ,@set-cmd)
+;;            ("unknown-command" ,@unknown-cmd))))
+;;     (parse-arguments
+;;      args
+;;      (lambda (actual-args-sans-opts opts)
+;;        (let* ((args-sans-opts (if (null? actual-args-sans-opts)
+;;                                   '("help")
+;;                                   actual-args-sans-opts))
+;;               (cmd-pair (assoc (car args-sans-opts) commands))
+;;               (cmd (if cmd-pair
+;;                        (cdr cmd-pair)
+;;                        (cdr (assoc "unknown-command" commands)))))
+;;          (cmd (car args-sans-opts)
+;;               opts
+;;               (cdr args-sans-opts))))
+;;      *options*)))
+;; (apply main (cdr (command-line)))
 (define (parse-arguments args kont options)
   (define (string-contains haystack chr)
     (call/cc
