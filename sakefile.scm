@@ -1,10 +1,11 @@
 (define modules
-  '(debug/debuggee
+  '(arguments
+    debug/debuggee
     error-code
     exception
-    functional
-    functional-arguments
     localization
+    functional-arguments
+    io
     profile
     repl-server
     rest-values
