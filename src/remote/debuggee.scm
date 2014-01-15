@@ -89,10 +89,14 @@
 
 ;;;-----------------------------------------------------------------------------
 
-(define (remote-debug ip . options)
-  (let ((port (or (assq 'port: options) 20000)))
-    (make-rdi-host (string-append ip ":" (number->string port)))
-    (thread-start!
-     (make-thread
-      (lambda () (##repl-debug-main))))))
+;;! Installs a remote REPL
+;; .parameter ip Ip number of the debug server
+;; .parameters options
+(define* (remote-repl-install! ip (port: 20000))
+  (make-rdi-host (string-append ip ":" (number->string port))))
 
+;;! Runs the installed REPL immediately. It must be installed first.
+(define (remote-repl-run!)
+  (thread-start!
+   (make-thread
+    (lambda () (##repl-debug-main)))))
