@@ -1,12 +1,15 @@
-;;;============================================================================
 ;;; Copyright (c) 2011-2012 by Marc Feeley, All Rights Reserved.
-;;;============================================================================
+;;; Modifications:
+;;; Copyright (c) 2014 by Álvaro Castro-Castilla, All Rights Reserved.
 
-(declare
- (standard-bindings)
- (extended-bindings)
- (block)
- (fixnum))
+(cond-expand
+ (optimize
+  (declare (standard-bindings) (extended-bindings) (not safe) (block)))
+ (debug
+  (declare (safe) (debug) (debug-location) (debug-source) (debug-environments)))
+ (else (void)))
+
+(define *repl-intercept-output* (lambda (character) (void)))
 
 (define (ide-repl-pump ide-repl-connection in-port out-port tgroup)
   (define m (make-mutex))
@@ -61,6 +64,7 @@
       (let ((c (read-char in-port)))
         (if (not (eof-object? c))
             (begin
+              (*repl-intercept-output* c)
               (mutex-lock! m)
               (write-char c ide-repl-connection)
               (force-output ide-repl-connection)
@@ -89,7 +93,7 @@
         (ide-repl-pump ide-repl-connection out-rd-port in-wr-port tgroup)
         (values in-rd-port out-wr-port)))))
 
-(define repl-channel-table (make-table (string->keyword "test") eq?))
+(define repl-channel-table (make-table test: eq?))
 
 (set! ##thread-make-repl-channel
       (lambda (thread)
@@ -108,9 +112,9 @@
 (define (repl-server password)
   (let ((server
          (open-tcp-server
-          (list (string->keyword "server-address") repl-server-address
-                (string->keyword "eol-encoding") 'cr-lf
-                (string->keyword "reuse-address") #t))))
+          (list server-address: repl-server-address
+                eol-encoding: 'cr-lf
+                reuse-address: #t))))
     (let loop1 ()
       (let* ((ide-repl-connection
               (read server))
@@ -133,6 +137,8 @@
         (thread-start! thread)
         (loop1)))))
 
-(define (repl-server-start password)
+(define* (repl-server-start password (intercept-output #f))
+  (if intercept-output
+      (set! *repl-intercept-output* intercept-output))
   (thread-start! (make-thread (lambda () (repl-server password))))
   (void))
