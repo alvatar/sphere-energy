@@ -2,6 +2,8 @@
 (dependencies:
  (exception
   (load (fabric: algorithm/list)))
+ (filesystem
+  (include (core: base-macros)))
  (functional-arguments
   (include (core: base-macros)))
  (testing-macros

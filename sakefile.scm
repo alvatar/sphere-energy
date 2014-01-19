@@ -3,8 +3,10 @@
     error-code
     exception
     localization
+    filesystem
     functional-arguments
     io
+    log
     profile
     remote/debuggee
     remote/rdi

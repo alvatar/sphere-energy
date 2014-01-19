@@ -136,7 +136,7 @@
       (warn dest " already exists")))))
 
 ;;! Copy a directory
-(define (copy-directory file dest (force: #f) (merge: #t))
+(define* (copy-directory file dest (force: #f) (merge: #t))
   (if (and force merge)
       (begin (warn "You can't both force and merge when copying directories, merge chosen for safety.")
              (set! force #f)))
