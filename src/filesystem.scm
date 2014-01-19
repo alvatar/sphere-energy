@@ -137,9 +137,9 @@
 
 ;;! Copy a directory
 (define (copy-directory file dest (force: #f) (merge: #t))
-  (when (and force merge)
-        (warn "You can't both force and merge when copying directories, merge chosen for safety.")
-        (set! force #f))
+  (if (and force merge)
+      (begin (warn "You can't both force and merge when copying directories, merge chosen for safety.")
+             (set! force #f)))
   (cond
    ((and force (file-exists? dest))
     (delete-file dest recursive: #t force: #t)
@@ -175,11 +175,9 @@
   (call-with-output-string
    ""
    (lambda (out)
-     (for-each (lambda (file) (display (read-file file) out))
-               files))))
+     (for-each (lambda (file) (display (read-file file) out)) files))))
 
 (define (append-files files dest)
   (call-with-output-file dest
     (lambda (out)
-      (for-each (lambda (file) (display (read-file file) out))
-                files))))
+      (for-each (lambda (file) (display (read-file file) out)) files))))
