@@ -1,8 +1,7 @@
 #!/usr/bin/env gsi-script
+;; Sense (debug-server) used in conjuction with remote debugging functionality
 
-;;; File: "debugger.scm"
-
-(##include "rdi.scm")
+(include "rdi.scm")
 
 ;;;----------------------------------------------------------------------------
 
@@ -53,10 +52,6 @@
     (else
      (error "unknown function"))))
 
-(##define (main #!optional port)
-  (set! rdi (rdi-create-server (and port (string->number port))))
-  (rdi-force-connection rdi))
-
 ;;;-----------------------------------------------------------------------------
 
 (define rdi-console-table (make-table))
@@ -103,4 +98,14 @@
                                    (substring buf 0 n))
                   (loop))))))))))
 
-;;;-----------------------------------------------------------------------------
+;;! Main
+(##define (main #!optional (port #f))
+  (set! rdi (rdi-create-server (and port (string->number port))))
+  (rdi-force-connection rdi))
+
+;; (let ((args (cdr (command-line))))
+;;   (if (null? args)
+;;       (main)
+;;       (if (null? (cdr args))
+;;           (main args)
+;;           (err "Too many arguments. Use: 'sense <port>'"))))

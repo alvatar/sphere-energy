@@ -1,6 +1,6 @@
-;;; File: "debuggee.scm"
+;; Functionality to embed remote debugging capabilities in a program
 
-(##include "rdi.scm")
+(include "rdi.scm")
 
 ;;;-----------------------------------------------------------------------------
 
@@ -92,7 +92,7 @@
 ;;! Installs a remote REPL
 ;; .parameter ip Ip number of the debug server
 ;; .parameters options
-(define* (remote-repl-install! ip (port: 20000))
+(define* (remote-repl-setup! ip (port: 20000))
   (make-rdi-host (string-append ip ":" (number->string port))))
 
 ;;! Runs the installed REPL immediately. It must be installed first.
