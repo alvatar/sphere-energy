@@ -100,6 +100,8 @@
 
 ;;! Main
 (##define (main #!optional (port #f))
+  (println "To close this server, kill the 'gsi-script' process.")
+  (println "Listening on port " (or port "7000"))
   (set! rdi (rdi-create-server (and port (string->number port))))
   (rdi-force-connection rdi))
 
