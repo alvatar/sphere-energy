@@ -95,19 +95,12 @@
 
 (define repl-channel-table (make-table test: eq?))
 
-(set! ##thread-make-repl-channel
-      (lambda (thread)
-        (let ((tgroup (thread-thread-group thread)))
-          (or (table-ref repl-channel-table tgroup #f)
-              (##default-thread-make-repl-channel thread)))))
-
 (define (setup-ide-repl-channel ide-repl-connection tgroup)
   (receive (in-port out-port) (make-ide-repl-ports ide-repl-connection tgroup)
     (let ((repl-channel (##make-repl-channel-ports in-port out-port)))
       (table-set! repl-channel-table tgroup repl-channel))))
 
 (define repl-server-address #f)
-(set! repl-server-address "*:7000")
 
 (define (repl-server password)
   (let ((server
@@ -137,8 +130,19 @@
         (thread-start! thread)
         (loop1)))))
 
+;;! Initialize REPL server with defaults
+(define (repl-server-initialize-defaults!)
+  (set! ##thread-make-repl-channel
+        (lambda (thread)
+          (let ((tgroup (thread-thread-group thread)))
+            (or (table-ref repl-channel-table tgroup #f)
+                (##default-thread-make-repl-channel thread)))))
+  (set! repl-server-address "*:7000"))
+
+;;! Start REPL server
 (define* (repl-server-start password (intercept-output #f))
   (if intercept-output
       (set! *repl-intercept-output* intercept-output))
   (thread-start! (make-thread (lambda () (repl-server password))))
   (void))
+
