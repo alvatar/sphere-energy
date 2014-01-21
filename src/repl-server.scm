@@ -140,7 +140,7 @@
   (set! repl-server-address "*:7000"))
 
 ;;! Start REPL server
-(define* (repl-server-start password (intercept-output #f))
+(define* (repl-server-start password (intercept-output: #f))
   (if intercept-output
       (set! *repl-intercept-output* intercept-output))
   (thread-start! (make-thread (lambda () (repl-server password))))
