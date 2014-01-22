@@ -58,6 +58,10 @@
 (define* (fileset (dir: (current-directory))
                   (test: any?)
                   (recursive: #f))
+  (define (reduce f i l)
+    (let reduce ((i i) (l l))
+      (if (null? l) i
+          (reduce (f i (car l)) (cdr l)))))
   (let ((dir (path-add-trailing-directory-separator dir)))
     (reduce append '() 
             (map (lambda (name) 
