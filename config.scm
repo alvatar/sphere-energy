@@ -3,7 +3,8 @@
  (exception
   (load (fabric: algorithm/list)))
  (filesystem
-  (include (core: base-macros)))
+  (include (core: base-macros))
+  (load (= log)))
  (functional-arguments
   (include (core: base-macros)))
  (testing-macros
