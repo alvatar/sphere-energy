@@ -7,6 +7,9 @@
   (load (= log)))
  (functional-arguments
   (include (core: base-macros)))
+ (remote/debuggee
+  (include (core: base-macros))
+  (load (= remote/rdi)))
  (repl-server
   (include (core: base-macros)))
  (rest-values

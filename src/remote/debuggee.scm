@@ -1,6 +1,6 @@
 ;; Functionality to embed remote debugging capabilities in a program
 
-(include "rdi.scm")
+
 
 ;;;-----------------------------------------------------------------------------
 
@@ -9,7 +9,7 @@
 (define (make-rdi-host host)
   (set! rdi (rdi-create-client host)))
 
-(define (rdi-function fn)
+(define (debuggee-rdi-function fn)
   (case fn
     ((console-input)
      rdi-console-input)
@@ -84,8 +84,7 @@
      (let ((local-port (make-repl-channel-remote-port thread)))
        (##make-repl-channel-ports local-port local-port)))))
 
-(set! ##thread-make-repl-channel
-      thread-make-repl-channel-remote)
+
 
 ;;;-----------------------------------------------------------------------------
 
@@ -93,6 +92,9 @@
 ;; .parameter ip Ip number of the debug server
 ;; .parameters options
 (define* (remote-repl-setup! ip (port: 20000))
+  (rdi-set-rdi-function! debuggee-rdi-function)
+  (set! ##thread-make-repl-channel
+        thread-make-repl-channel-remote)
   (make-rdi-host (string-append ip ":" (number->string port))))
 
 ;;! Runs the installed REPL immediately. It must be installed first.

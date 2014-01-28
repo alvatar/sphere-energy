@@ -20,7 +20,7 @@
             (list path: "xterm"
                   arguments: (list "-e"
                                    "gsi"
-                                   "pump.scm"
+                                   "~~spheres/energy/src/remote/pump.scm"
                                    (number->string tcp-port))))))
     (let loop ()
       (let ((port
@@ -43,7 +43,7 @@
 
 (define rdi #f)
 
-(define (rdi-function fn)
+(define (debug-server-rdi-function fn)
   (case fn
     ((register-console)
      rdi-register-console)
@@ -100,8 +100,9 @@
 
 ;;! Main
 (##define (main #!optional (port #f))
-  (println "To close this server, kill the 'gsi-script' process.")
-  (println "Listening on port " (or port "7000"))
+  (println "To close this server, kill the 'gsi' process.")
+  (println "Listening on port " (or port "20000"))
+  (rdi-set-rdi-function! debug-server-rdi-function)
   (set! rdi (rdi-create-server (and port (string->number port))))
   (rdi-force-connection rdi))
 

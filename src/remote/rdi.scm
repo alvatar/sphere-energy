@@ -4,6 +4,10 @@
 (define (rdi-set-host! address)
   (set! default-remote-debugger-address address))
 
+(define *rdi-function* (lambda (x) x))
+(define (rdi-set-rdi-function! f)
+  (set! *rdi-function* f))
+
 (define (split-address str)
   (call-with-input-string
       str
@@ -172,7 +176,7 @@
                 (call
                  (caddr msg))
                 (result
-                 (apply (rdi-function (car call))
+                 (apply (*rdi-function* (car call))
                         (cdr call))))
            (rdi-send rdi (list 'return seq-num result))
            #t))
@@ -218,4 +222,3 @@
      (list 'remote-call result-mutex (cons fn args)))
     (mutex-lock! result-mutex) ;; wait until result is ready
     (mutex-specific result-mutex)))
-

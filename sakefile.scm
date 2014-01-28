@@ -9,6 +9,7 @@
     log
     profile
     remote/debuggee
+    remote/rdi
     repl-server
     rest-values
     shared-structure
@@ -22,9 +23,9 @@
   ;; Copy internal file to build directory
   (copy-file (string-append (current-source-directory) "/remote/rdi.scm")
              (string-append (current-build-directory) "/rdi.scm"))
-  ;; Make Sense script standalone
+  ;; Make debug server script standalone (expand includes)
   (sake#expand-includes (string-append (current-source-directory) "remote/debug-server.scm")
-                        (string-append (current-build-directory) "sense.scm"))
+                        (string-append (current-build-directory) "debug-server.scm"))
   ;; Compile all modules
   (sake#parallel-for-each
    (lambda (m)
@@ -36,8 +37,10 @@
   (for-each (lambda (m) (sake#make-module-available m versions: '(() (debug)))) modules))
 
 (define-task install ()
-  ;; Install Sake extension
-  (copy-file (string-append (current-build-directory) "sense.scm")
+  ;; Install Sense
+  (copy-file (string-append (current-build-directory) "debug-server.scm")
+             "~~bin/debug-server.scm")
+  (copy-file (string-append (current-source-directory) "remote/sense")
              "~~bin/sense")
   (sake#install-sphere-to-system))
 
