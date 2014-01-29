@@ -92,10 +92,18 @@
 ;; .parameter ip Ip number of the debug server
 ;; .parameters options
 (define* (remote-repl-setup! ip (port: 20000))
-  (rdi-set-rdi-function! debuggee-rdi-function)
-  (set! ##thread-make-repl-channel
-        thread-make-repl-channel-remote)
-  (make-rdi-host (string-append ip ":" (number->string port))))
+  (let ((address (string-append ip ":" (number->string port))))
+    (and (with-exception-catcher
+          (lambda (e) #f)
+          (lambda () (let ((p (open-tcp-client address)))
+                 (write '() p)
+                 (force-output p))))
+         (begin
+           (rdi-set-rdi-function! debuggee-rdi-function)
+           (set! ##thread-make-repl-channel
+                 thread-make-repl-channel-remote)
+           (make-rdi-host address)
+           'connected))))
 
 ;;! Runs the installed REPL immediately. It must be installed first.
 (define (remote-repl-run!)
