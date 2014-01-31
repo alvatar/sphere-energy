@@ -4,6 +4,10 @@
 (define (rdi-set-host! address)
   (set! default-remote-debugger-address address))
 
+(define *rdi-function* (lambda (x) x))
+(define (rdi-set-rdi-function! f)
+  (set! *rdi-function* f))
+
 (define (split-address str)
   (call-with-input-string
       str
@@ -96,13 +100,11 @@
          (open-tcp-client
           (list server-address: (rdi-address rdi)
                 port-number: (rdi-port-num rdi)))))
-
     (write rdi-version1 connection)
     (force-output connection)
-
     (let ((response (read connection)))
       (if (not (equal? response rdi-version2))
-          (error "unexpected debugger version")
+          (error "unexpected debugger version: " response)
           (let ((reader-thread (rdi-create-reader-thread rdi connection)))
             (rdi-connection-set! rdi connection)
             (thread-start! reader-thread)
@@ -118,12 +120,10 @@
              (read listen-port)))
         (let ((request (read connection)))
           (if (not (equal? request rdi-version1))
-              (error "unexpected debuggee version")
+              (error "unexpected debuggee version: " request)
               (begin
-
                 (write rdi-version2 connection)
                 (force-output connection)
-
                 (let ((reader-thread (rdi-create-reader-thread rdi connection)))
                   (rdi-connection-set! rdi connection)
                   (thread-start! reader-thread)
@@ -172,7 +172,7 @@
                 (call
                  (caddr msg))
                 (result
-                 (apply (rdi-function (car call))
+                 (apply (*rdi-function* (car call))
                         (cdr call))))
            (rdi-send rdi (list 'return seq-num result))
            #t))
@@ -218,4 +218,3 @@
      (list 'remote-call result-mutex (cons fn args)))
     (mutex-lock! result-mutex) ;; wait until result is ready
     (mutex-specific result-mutex)))
-

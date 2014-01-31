@@ -1,8 +1,7 @@
 #!/usr/bin/env gsi-script
+;; Sense (debug-server) used in conjuction with remote debugging functionality
 
-;;; File: "debugger.scm"
-
-(##include "rdi.scm")
+(include "rdi.scm")
 
 ;;;----------------------------------------------------------------------------
 
@@ -21,7 +20,7 @@
             (list path: "xterm"
                   arguments: (list "-e"
                                    "gsi"
-                                   "pump.scm"
+                                   "~~spheres/energy/src/remote/pump.scm"
                                    (number->string tcp-port))))))
     (let loop ()
       (let ((port
@@ -44,7 +43,7 @@
 
 (define rdi #f)
 
-(define (rdi-function fn)
+(define (debug-server-rdi-function fn)
   (case fn
     ((register-console)
      rdi-register-console)
@@ -52,10 +51,6 @@
      rdi-console-output)
     (else
      (error "unknown function"))))
-
-(##define (main #!optional port)
-  (set! rdi (rdi-create-server (and port (string->number port))))
-  (rdi-force-connection rdi))
 
 ;;;-----------------------------------------------------------------------------
 
@@ -103,4 +98,17 @@
                                    (substring buf 0 n))
                   (loop))))))))))
 
-;;;-----------------------------------------------------------------------------
+;;! Main
+(##define (main #!optional (port #f))
+  (println "To close this server, kill the 'gsi' process.")
+  (println "Listening on port " (or port "20000"))
+  (rdi-set-rdi-function! debug-server-rdi-function)
+  (set! rdi (rdi-create-server (and port (string->number port))))
+  (rdi-force-connection rdi))
+
+;; (let ((args (cdr (command-line))))
+;;   (if (null? args)
+;;       (main)
+;;       (if (null? (cdr args))
+;;           (main args)
+;;           (err "Too many arguments. Use: 'sense <port>'"))))

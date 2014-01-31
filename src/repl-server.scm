@@ -1,17 +1,15 @@
 ;;; Copyright (c) 2011-2012 by Marc Feeley, All Rights Reserved.
+;;; Modifications:
+;;; Copyright (c) 2014 by Álvaro Castro-Castilla, All Rights Reserved.
 
 (cond-expand
  (optimize
-  (declare (standard-bindings) (extended-bindings) (not safe) (block) (fixnum)))
+  (declare (standard-bindings) (extended-bindings) (not safe) (block)))
  (debug
   (declare (safe) (debug) (debug-location) (debug-source) (debug-environments)))
  (else (void)))
 
-(declare
- (standard-bindings)
- (extended-bindings)
- (block)
- (fixnum))
+(define *repl-intercept-output* (lambda (character) (void)))
 
 (define (ide-repl-pump ide-repl-connection in-port out-port tgroup)
   (define m (make-mutex))
@@ -66,6 +64,7 @@
       (let ((c (read-char in-port)))
         (if (not (eof-object? c))
             (begin
+              (*repl-intercept-output* c)
               (mutex-lock! m)
               (write-char c ide-repl-connection)
               (force-output ide-repl-connection)
@@ -94,13 +93,7 @@
         (ide-repl-pump ide-repl-connection out-rd-port in-wr-port tgroup)
         (values in-rd-port out-wr-port)))))
 
-(define repl-channel-table (make-table (string->keyword "test") eq?))
-
-(set! ##thread-make-repl-channel
-      (lambda (thread)
-        (let ((tgroup (thread-thread-group thread)))
-          (or (table-ref repl-channel-table tgroup #f)
-              (##default-thread-make-repl-channel thread)))))
+(define repl-channel-table (make-table test: eq?))
 
 (define (setup-ide-repl-channel ide-repl-connection tgroup)
   (receive (in-port out-port) (make-ide-repl-ports ide-repl-connection tgroup)
@@ -108,14 +101,13 @@
       (table-set! repl-channel-table tgroup repl-channel))))
 
 (define repl-server-address #f)
-(set! repl-server-address "*:7000")
 
 (define (repl-server password)
   (let ((server
          (open-tcp-server
-          (list (string->keyword "server-address") repl-server-address
-                (string->keyword "eol-encoding") 'cr-lf
-                (string->keyword "reuse-address") #t))))
+          (list server-address: repl-server-address
+                eol-encoding: 'cr-lf
+                reuse-address: #t))))
     (let loop1 ()
       (let* ((ide-repl-connection
               (read server))
@@ -138,6 +130,19 @@
         (thread-start! thread)
         (loop1)))))
 
-(define (repl-server-start password)
+;;! Initialize REPL server with defaults
+(define (repl-server-initialize-defaults!)
+  (set! ##thread-make-repl-channel
+        (lambda (thread)
+          (let ((tgroup (thread-thread-group thread)))
+            (or (table-ref repl-channel-table tgroup #f)
+                (##default-thread-make-repl-channel thread)))))
+  (set! repl-server-address "*:7000"))
+
+;;! Start REPL server
+(define* (repl-server-start password (intercept-output: #f))
+  (if intercept-output
+      (set! *repl-intercept-output* intercept-output))
   (thread-start! (make-thread (lambda () (repl-server password))))
   (void))
+

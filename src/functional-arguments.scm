@@ -30,11 +30,10 @@
 
 (cond-expand
  (optimize
-  (declare (standard-bindings) (extended-bindings) (not safe) (block)))
+  (declare (standard-bindings) (fixnum) (separate)))
  (debug
-  (declare (safe) (debug) (debug-location) (debug-source) (debug-environments)))
+  (declare (safe) (debug) (debug-location) (debug-source) (debug-environments) (separate)))
  (else (void)))
-
 
 (define option #f)
 (define option-names #f)
