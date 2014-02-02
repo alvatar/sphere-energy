@@ -24,3 +24,7 @@ Otherwise, please read the [quickstart guide](http://www.schemespheres.org/guide
 * API for test suites (SRFI-64)
 * Time procedures (SRFI-19)
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/alvatar/sphere-energy/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
