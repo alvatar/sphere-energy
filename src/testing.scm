@@ -465,6 +465,12 @@
 
 ;;! test-apply
 (define (test-apply first . rest)
+  (define (reverse! lis)
+    (let lp ((lis lis) (ans '()))
+      (if (null? lis) ans
+          (let ((tail (cdr lis)))
+            (set-cdr! lis ans)
+            (lp tail lis)))))
   (if (test-runner? first)
       (test-with-runner first (apply test-apply rest))
       (let ((r (test-runner-current)))
