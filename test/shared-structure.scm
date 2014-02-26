@@ -1,3 +1,5 @@
+(##import energy: testing)
+
 (include "src/shared-structure.scm")
 
 (test-begin "SRFI-38: External representation for data with shared structure")
