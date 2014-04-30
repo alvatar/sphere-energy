@@ -1,6 +1,7 @@
-;;; Copyright (c) 2012, Alvaro Castro-Castilla. All rights reserved.
-;;; Code based on Phil Dawe's solution
-;;; Basic profiling
+;;!!! Simple profiling
+;;
+;; .author Phil Dawe
+;; .author Alvaro Castro-Castilla, various modifications, 2012
 
 (cond-expand
  (optimize
