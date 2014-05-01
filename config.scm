@@ -1,6 +1,6 @@
 (sphere: "energy")
 (dependencies:
- (exception
+ (condition
   (load (fabric: algorithm/list)))
  (filesystem
   (include (core: base-macros))
@@ -18,6 +18,6 @@
   (include (core: base-macros)))
  (testing-macros
   (include (core: base-macros)
-           (= exception-macros)))
+           (= condition-macros)))
  (testing
-  (load (energy: exception))))
+  (load (= condition))))
