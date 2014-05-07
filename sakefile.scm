@@ -1,7 +1,7 @@
 (define modules
   '(arguments
     error-code
-    exception
+    condition
     localization
     filesystem
     functional-arguments

@@ -80,6 +80,14 @@
 ;; 'fractional part'. Will Fitzgerald 5/16/2003.
 ;; --------------------------------------------------------------
 
+(cond-expand
+ (optimize
+  (declare (standard-bindings) (extended-bindings) (not safe) (block)))
+ (debug
+  (declare (safe) (debug) (debug-location) (debug-source) (debug-environments)))
+ (else (void)))
+
+
 ;; :optional macro
 ;; The code using this should be ported to Sphere's optional positional and named parameters
 (define-syntax :optional

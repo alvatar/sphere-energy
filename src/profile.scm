@@ -1,16 +1,22 @@
-;;; Copyright (c) 2012, Alvaro Castro-Castilla. All rights reserved.
-;;; Basic profiling
+;;!!! Simple profiling
+;;
+;; .author Phil Dawe
+;; .author Alvaro Castro-Castilla, various modifications, 2012
 
-;;; Code based on Phil Dawe's solution
+(cond-expand
+ (optimize
+  (declare (standard-bindings) (extended-bindings) (not safe) (block)))
+ (debug
+  (declare (safe) (debug) (debug-location) (debug-source) (debug-environments)))
+ (else (void)))
+
 
 (define %%*timerhash* (make-table))
 
-;;; Reset the timer table
-
+;;! Reset the timer table
 (define (%reset-timer) (set! %%*timerhash* (make-table)))
 
-;;; Core procedure measuring time
-
+;;! Core procedure measuring time
 (define (%%accum-time name thunk)
   (let* ((timebefore (real-time))
          (res (thunk)))
@@ -20,8 +26,7 @@
                         (+ (cadr current) 1))))
     res))
 
-;;; Get the times for timed functions
-
+;;! Get the times for timed functions
 (define (%get-times)
   (letrec ((quicksort
             (lambda (l gt?)

@@ -1,3 +1,14 @@
+;;; Copyright (c) 2013-2014, Alvaro Castro-Castilla. All rights reserved.
+;;; Micro template system for Scheme
+
+(cond-expand
+ (optimize
+  (declare (standard-bindings) (extended-bindings) (not safe) (block)))
+ (debug
+  (declare (safe) (debug) (debug-location) (debug-source) (debug-environments)))
+ (else (void)))
+
+
 ;;! Core template building procedure, builds the code to be compiled or interpreted
 ;; Arguments are passed to sub-templates in the variable "args"
 ;; ((eval
@@ -158,7 +169,6 @@
 ;;! Build a template, use a string as input
 (define (build-template-from-string template . parameters)
   (eval (generate-template-code (string->list template) parameters)))
-
 
 ;;! Build a template, use a file as input
 (define (build-template-from-file file . parameters)
