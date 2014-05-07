@@ -16,30 +16,30 @@
 	       (%test-on-test-end r res))))
        (%test-report-result)))))
 
+(define-syntax %test-comp2body
+  (syntax-rules ()
+    ((_ r comp expected expr)
+     (let ()
+       (if (%test-on-test-begin r)
+           (let ((exp expected))
+             (test-result-set! r 'expected-value exp)
+             (let ((res (%test-evaluate-with-catch expr)))
+               (test-result-set! r 'actual-value res)
+               (%test-on-test-end r (comp exp res)))))
+       (%test-report-result)))))
+
 ;; internal
 (define-syntax %test-comp2
-  (let-syntax
-      ((%test-comp2body
-        (syntax-rules ()
-          ((_ r comp expected expr)
-           (let ()
-             (if (%test-on-test-begin r)
-                 (let ((exp expected))
-                   (test-result-set! r 'expected-value exp)
-                   (let ((res (%test-evaluate-with-catch expr)))
-                     (test-result-set! r 'actual-value res)
-                     (%test-on-test-end r (comp exp res)))))
-             (%test-report-result))))))
-    (syntax-rules ()
-      ((%test-comp2 comp tname expected expr)
-       (let* ((r (test-runner-get))
-              (name tname))
-         (test-result-alist! r (list (cons 'test-name tname)))
-         (%test-comp2body r comp expected expr)))
-      ((%test-comp2 comp expected expr)
-       (let* ((r (test-runner-get)))
-         (test-result-alist! r '())
-         (%test-comp2body r comp expected expr))))))
+  (syntax-rules ()
+    ((%test-comp2 comp tname expected expr)
+     (let* ((r (test-runner-get))
+            (name tname))
+       (test-result-alist! r (list (cons 'test-name tname)))
+       (%test-comp2body r comp expected expr)))
+    ((%test-comp2 comp expected expr)
+     (let* ((r (test-runner-get)))
+       (test-result-alist! r '())
+       (%test-comp2body r comp expected expr)))))
 
 ;;! test-begin
 (define-syntax test-begin
@@ -133,31 +133,30 @@
      (%test-comp2 (%test-approximimate= error) expected expr))))
 
 ;;! test-error
+(define-syntax %test-error
+  (syntax-rules ()
+    ((_ r etype expr)
+     (%test-comp1body
+      r
+      (guard (ex ((condition-type? etype)
+                  (and (condition? ex) (condition-has-type? ex etype)))
+                 ((procedure? etype)
+                  (etype ex))
+                 ((equal? etype #t)
+                  #t)
+                 (else #t))
+             expr)))))
 (define-syntax test-error
-  (let-syntax
-      ((%test-error
-        (syntax-rules ()
-          ((_ r etype expr)
-           (%test-comp1body
-            r
-            (guard (ex ((condition-type? etype)
-                        (and (condition? ex) (condition-has-type? ex etype)))
-                       ((procedure? etype)
-                        (etype ex))
-                       ((equal? etype #t)
-                        #t)
-                       (else #t))
-                   expr))))))
-    (syntax-rules ()
-      ((test-error name etype expr)
-       (let ((r (test-runner-get)))
-         (test-assert name (%test-error r etype expr))))
-      ((test-error etype expr)
-       (let ((r (test-runner-get)))
-         (test-assert (%test-error r etype expr))))
-      ((test-error expr)
-       (let ((r (test-runner-get)))
-         (test-assert (%test-error r #t expr)))))))
+  (syntax-rules ()
+    ((test-error name etype expr)
+     (let ((r (test-runner-get)))
+       (test-assert name (%test-error r etype expr))))
+    ((test-error etype expr)
+     (let ((r (test-runner-get)))
+       (test-assert (%test-error r etype expr))))
+    ((test-error expr)
+     (let ((r (test-runner-get)))
+       (test-assert (%test-error r #t expr))))))
 
 ;;! test-with-runner
 (define-syntax test-with-runner
@@ -206,7 +205,3 @@
        (%test-runner-fail-list! runner
                                 (cons (test-match-all (%test-as-specifier pred)  ...)
                                       (%test-runner-fail-list runner)))))))
-
-
-
-

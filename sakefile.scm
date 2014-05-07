@@ -29,12 +29,12 @@
   ;; Compile all modules
   (sake#parallel-for-each
    (lambda (m)
-     (sake#compile-module m cond-expand-features: '(debug) version: '(debug))
-     (sake#compile-module m cond-expand-features: '(optimize)))
+     ;;(sake#compile-module m cond-expand-features: '(debug) version: '(debug))
+     (sake#compile-module m cond-expand-features: '()))
    modules))
 
 (define-task post-compile ()
-  (for-each (lambda (m) (sake#make-module-available m versions: '(() (debug)))) modules))
+  (for-each (lambda (m) (sake#make-module-available m versions: '(()))) modules))
 
 (define-task install ()
   ;; Install Sense

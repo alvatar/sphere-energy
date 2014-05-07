@@ -1,4 +1,5 @@
-(include "src/shared-structure.scm")
+(##spheres-load energy: testing)
+(##spheres-load shared-structure)
 
 (test-begin "SRFI-38: External representation for data with shared structure")
 
