@@ -7,6 +7,8 @@
   (load (= log)))
  (functional-arguments
   (include (core: base-macros)))
+ (io
+  (include (core: base-macros)))
  (remote/debuggee
   (include (core: base-macros))
   (load (= remote/rdi)))
