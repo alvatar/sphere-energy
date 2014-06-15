@@ -14,14 +14,18 @@
 
 (define (open-console-window console-id)
   (let ((tcp-port (+ 9000 (new-console-window-num))))
-    ;(pp `(grime-open-client ,console-id ,tcp-port))
-    (let ((window
-           (open-process
-            (list path: "xterm"
-                  arguments: (list "-e"
-                                   "gsi"
-                                   "~~spheres/energy/src/remote/pump.scm"
-                                   (number->string tcp-port))))))
+    (display "EMACS-EVAL: ")
+    (pp `(sense-open-client ,console-id ,tcp-port))
+    
+    (let (
+          ;; (window
+          ;;  (open-process
+          ;;   (list path: "xterm"
+          ;;         arguments: (list "-e"
+          ;;                          "gsi"
+          ;;                          "~~spheres/energy/src/remote/pump.scm"
+          ;;                          (number->string tcp-port)))))
+          )
     (let loop ()
       (let ((port
              (with-exception-catcher
@@ -100,6 +104,7 @@
 
 ;;! Main
 (##define (main #!optional (port #f))
+  (println "Running Emacs remote Gambit debugging")
   (println "To close this server, kill the 'gsi' process.")
   (println "Listening on port " (or port "20000"))
   (rdi-set-rdi-function! debug-server-rdi-function)

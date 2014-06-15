@@ -42,6 +42,10 @@
              "~~bin/debug-server.scm")
   (copy-file (string-append (current-source-directory) "remote/sense")
              "~~bin/sense")
+  (copy-file (string-append (current-source-directory) "remote/pump.scm")
+             "~~bin/pump.scm")
+  (copy-file (string-append (current-source-directory) "remote/sense-pump")
+             "~~bin/sense-pump")
   (sake#install-sphere-to-system))
 
 (define-task test ()
