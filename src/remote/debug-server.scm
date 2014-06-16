@@ -12,20 +12,19 @@
     (set! console-window-num x)
     x))
 
+(define *within-emacs* #f)
+
 (define (open-console-window console-id)
   (let ((tcp-port (+ 9000 (new-console-window-num))))
-    (display "EMACS-EVAL: ")
-    (pp `(sense-open-client ,console-id ,tcp-port))
-    
-    (let (
-          ;; (window
-          ;;  (open-process
-          ;;   (list path: "xterm"
-          ;;         arguments: (list "-e"
-          ;;                          "gsi"
-          ;;                          "~~spheres/energy/src/remote/pump.scm"
-          ;;                          (number->string tcp-port)))))
-          )
+    (if *within-emacs*
+        (begin (display "EMACS-EVAL: ")
+               (pp `(sense-open-client ,console-id ,tcp-port)))
+        (open-process
+         (list path: "xterm"
+               arguments: (list "-e"
+                                "gsi"
+                                "~~spheres/energy/src/remote/pump.scm"
+                                (number->string tcp-port)))))
     (let loop ()
       (let ((port
              (with-exception-catcher
@@ -41,7 +40,7 @@
             (begin
               (thread-sleep! .1) ;; wait until the pump starts
               (loop))
-            port))))))
+            port)))))
 
 ;;;-----------------------------------------------------------------------------
 
@@ -103,8 +102,10 @@
                   (loop))))))))))
 
 ;;! Main
-(##define (main #!optional (port #f))
-  (println "Running Emacs remote Gambit debugging")
+(##define (main #!optional (port #f) (emacs? #f))
+  (if (and emacs? (string=? emacs? "emacs"))
+      (begin (println "Running Emacs remote Gambit debugging")
+             (set! *within-emacs* #t)))
   (println "To close this server, kill the 'gsi' process.")
   (println "Listening on port " (or port "20000"))
   (rdi-set-rdi-function! debug-server-rdi-function)

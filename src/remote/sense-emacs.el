@@ -84,7 +84,7 @@
   (sense-kill)
   (let ((proc (start-process "sense"
                              "*sense-messages*"
-                             "/usr/local/Gambit-C/bin/sense"
+                             "/usr/local/Gambit-C/bin/sense-emacs"
                              "20000")))
     (set-process-filter proc 'sense-receive-command)
     (message "Sense server started...")))

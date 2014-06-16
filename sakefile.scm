@@ -42,6 +42,8 @@
              "~~bin/debug-server.scm")
   (copy-file (string-append (current-source-directory) "remote/sense")
              "~~bin/sense")
+  (copy-file (string-append (current-source-directory) "remote/sense-emacs")
+             "~~bin/sense-emacs")
   (copy-file (string-append (current-source-directory) "remote/pump.scm")
              "~~bin/pump.scm")
   (copy-file (string-append (current-source-directory) "remote/sense-pump")
