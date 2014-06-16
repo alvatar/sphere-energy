@@ -39,7 +39,8 @@
       (set-buffer (make-comint name "/usr/local/Gambit-C/bin/sense-pump"
                                nil (number-to-string port)))
       (inferior-scheme-mode)
-      (if master (sense-make-scheme-buffer)))))
+      (if master (sense-make-scheme-buffer))
+      (switch-to-buffer (current-buffer)))))
 
 (defun sense-make-scheme-buffer ()
   (interactive)
