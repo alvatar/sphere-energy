@@ -1,5 +1,7 @@
 ;; Remote Gambit debugging
 
+(require 'cmuscheme)
+
 (defun get-sense-process ()
   (get-process "sense"))
 
