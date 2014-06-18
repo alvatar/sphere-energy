@@ -1,4 +1,4 @@
-;;; Copyright (c) 2014 by Álvaro Castro Castilla
+;;; Copyright (c) 2014 by Álvaro Castro-Castilla
 ;;; Logging utilities
 
 ;;! Generic log message
